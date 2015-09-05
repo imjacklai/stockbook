@@ -2,8 +2,30 @@
 <html>
 <head>
   <title>Stock Book</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  test
+<body ng-app="stockbook">
+  <div id="sidebar">
+    sidebar
+  </div>
+
+  <div id="container">
+    <div id="input">
+      input
+    </div>
+
+    <div id="content" ng-controller="TabsCtrl">
+      <tabset justified="true">
+        <tab heading="交易紀錄">交易紀錄</tab>
+        <tab heading="統計圖表">統計圖表</tab>
+      </tabset>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="js/angular.min.js"></script>
+  <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.4.min.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>
