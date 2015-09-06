@@ -3,18 +3,22 @@ var Database = require("nedb");
 var stockDB = new Database({ filename: path.join(__dirname, "db/stock.db"), autoload: true });
 var currentDB;
 var currentStock;
+var addActions = [ "買進股票", "股票股利" ];
+var minusActions = [ "賣出股票", "現金股利", "減資配發" ];
 
 var stockBook = angular.module('stockbook', []);
 
 stockBook.controller("StockListCtrl", function ($scope) {
-  $scope.actions = [ "買進", "賣出", "現金股利", "股票股利", "減資配發" ]
+  $scope.actions = addActions.concat(minusActions);
   $scope.stocks = [];
   $scope.records = [];
 
   stockDB.find({}, function (err, docs) {
     $scope.stocks = docs;
     $scope.$apply();
-    $scope.showContent(docs[0].name);
+    if (docs.length != 0) {
+      $scope.showContent(docs[0].name);
+    }
   });
 
   $scope.addStock = function (stockName) {
@@ -34,8 +38,25 @@ stockBook.controller("StockListCtrl", function ($scope) {
     currentStock = stockName;
     $scope.selectedStock = stockName;
     currentDB = new Database({ filename: path.join(__dirname, "db/" + stockName + ".db"), autoload: true });
+
     currentDB.find({}).sort({ date: -1 }).exec(function (err, docs) {
+      var totalShare = 0;
+      var totalInvest = 0;
+
+      for (var i = 0; i < docs.length; i++) {
+        if (addActions.indexOf(docs[i].action) != -1) {
+          totalShare += docs[i].share;
+          totalInvest += docs[i].amount;
+        }
+        else if (minusActions.indexOf(docs[i].action) != -1) {
+          totalShare -= docs[i].share;
+          totalInvest -= docs[i].amount;
+        }
+      }
+
       $scope.records = docs;
+      $scope.totalShare = totalShare;
+      $scope.totalAmount = totalInvest;
       $scope.$apply();
     });
   }
@@ -62,15 +83,7 @@ stockBook.controller("StockListCtrl", function ($scope) {
     };
 
     currentDB.insert(record);
-
-    $scope.records.push({
-      date: $scope.date,
-      action: $scope.action,
-      share: $scope.share,
-      price: $scope.price,
-      amount: $scope.amount
-    });
-
+    $scope.showContent(currentStock);
     $scope.date = $scope.action = $scope.share = $scope.price = $scope.amount = null;
   }
 
