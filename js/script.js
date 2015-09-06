@@ -16,6 +16,7 @@ stockBook.controller("StockListCtrl", function ($scope) {
   $scope.showStockList = function (isInitial) {
     stockDB.find({}, function (err, docs) {
       $scope.stocks = docs;
+      $scope.isEmpty = docs.length == 0;
       $scope.$apply();
       if (docs.length != 0 && isInitial) {
         $scope.showContent(docs[0].name);
@@ -27,9 +28,10 @@ stockBook.controller("StockListCtrl", function ($scope) {
     if (stockName != null) {
       var stock = { name: stockName };
       stockDB.insert(stock);
-      new Database({ filename: path.join(__dirname, "db/" + stockName + ".db"), autoload: true });
+      new Database({ filename: path.join(__dirname, "db/" + stockName + ".db") });
       $scope.newStockName = null;
       $scope.showStockList(false);
+      $scope.showContent(stockName);
     }
   }
 
