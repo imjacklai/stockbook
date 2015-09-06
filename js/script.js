@@ -1,4 +1,5 @@
 var path = require("path");
+var fs = require("fs");
 var Database = require("nedb");
 var stockDB = new Database({ filename: path.join(__dirname, "db/stock.db"), autoload: true });
 var currentDB;
@@ -88,9 +89,17 @@ stockBook.controller("StockListCtrl", function ($scope) {
     $scope.date = $scope.action = $scope.share = $scope.price = $scope.amount = null;
   }
 
-  $scope.delete = function (id) {
+  $scope.deleteRecord = function (id) {
     currentDB.remove({ _id: id }, {});
     $scope.showContent(currentStock);
+  };
+
+  $scope.deleteStock = function (stockName) {
+    fs.unlink(path.join(__dirname, "db/" + stockName + ".db"), function (err) {
+      if (err) throw err;
+    });
+    stockDB.remove({ name: stockName }, {});
+    $scope.showStockList(true);
   };
 
   $scope.showStockList(true);

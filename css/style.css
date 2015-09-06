@@ -9,6 +9,10 @@ hr {
   border: 0;
 }
 
+form {
+  display: inline-block;
+}
+
 .table tbody > tr > td {
   vertical-align: middle;
 }
@@ -40,6 +44,10 @@ hr {
   position: relative;
   height: 73px;
   padding: 20px;
+}
+
+#delete-stock-btn {
+  float: right;
 }
 
 #content {

@@ -60,6 +60,8 @@
 
           <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>  
         </form>
+
+        <button id="delete-stock-btn" class="btn btn-danger" ng-click="deleteStock(selectedStock)"><i class="glyphicon glyphicon-trash"></i></button>
       </div>
       <!-- new record input end -->
 
@@ -90,7 +92,7 @@
               <td>{{ record.price }}</td>
               <td>{{ record.amount }}</td>
               <td>
-                <button class="btn btn-danger" ng-click="delete(record._id)"><i class="glyphicon glyphicon-trash"></i></button>
+                <button class="btn btn-danger" ng-click="deleteRecord(record._id)"><i class="glyphicon glyphicon-trash"></i></button>
               </td>
             </tr>
           </tbody>
