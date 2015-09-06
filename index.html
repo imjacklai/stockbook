@@ -4,41 +4,95 @@
   <title>Stock Book</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/jquery.datetimepicker.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body ng-controller="StockListCtrl">
+
   <div id="sidebar">
+
+    <!-- new stock input -->
     <div class="input-group">
       <input type="text" class="form-control" placeholder="輸入股票名稱" ng-model="newStockName">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="addStock(newStockName)">＋</button>
+        <button class="btn btn-default" type="button" ng-click="addStock(newStockName)"><i class="glyphicon glyphicon-plus"></i></button>
       </span>
     </div>
 
     <hr>
 
+    <!-- stock list -->
     <div>
       <div ng-repeat="stock in stocks">
         <p class="stock-link" ng-click="showContent(stock.name)" ng-class="{'stock-link-active': stock.name == selectedStock}">#&nbsp;&nbsp;{{ stock.name }}</p>
       </div>
     </div>
+
   </div>
 
   <div id="container">
+
+    <!-- new record input -->
     <div id="input">
-      <div id="stock-title" ng-model="title">{{ title }}</div>
+      <form class="form-inline" role="form" ng-submit="addRecord()">
+        <div class="form-group">
+          <input type="text" id="datepicker" class="form-control" placeholder="日期" ng-model="date">
+        </div>
+
+        <div class="form-group">
+          <select class="form-control" ng-model="action" ng-options="action for action in actions"><option></option></select>
+        </div>
+
+        <div class="form-group">
+          <input type="number" class="form-control" placeholder="股數" ng-model="share">
+        </div>
+
+        <div class="form-group">
+          <input type="number" class="form-control" placeholder="單價" ng-model="price">
+        </div>
+
+        <div class="form-group">
+          <input type="number" class="form-control" placeholder="總額" ng-model="amount">
+        </div>
+
+        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>  
+      </form>
     </div>
 
-    <div id="content" ng-controller="TabsCtrl">
-      <tabset justified="true">
-        <tab heading="交易紀錄">交易紀錄</tab>
-        <tab heading="統計圖表">統計圖表</tab>
-      </tabset>
+    <!-- records table -->
+    <div id="content">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>類型</th>
+            <th>股數</th>
+            <th>單價</th>
+            <th>總額</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="record in records">
+            <td>{{ record.date }}</td>
+            <td>{{ record.action }}</td>
+            <td>{{ record.share }}</td>
+            <td>{{ record.price }}</td>
+            <td>{{ record.amount }}</td>
+            <td>
+              <button class="btn btn-danger" ng-click="delete(record._id)"><i class="glyphicon glyphicon-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
+  <script>
+    window.$ = window.jQuery = require("./js/jquery-1.11.3.min.js");
+  </script>
   <script type="text/javascript" src="js/angular.min.js"></script>
-  <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.4.min.js"></script>
+  <script type="text/javascript" src="js/jquery.datetimepicker.js"></script>
   <script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>

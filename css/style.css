@@ -9,6 +9,10 @@ hr {
   border: 0;
 }
 
+.table tbody > tr > td {
+  vertical-align: middle;
+}
+
 #sidebar {
   float: left;
   width: 200px;
@@ -35,14 +39,7 @@ hr {
 #input {
   position: relative;
   height: 73px;
-  padding-left: 20px;
-}
-
-#stock-title {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
+  padding: 20px;
 }
 
 #content {
@@ -51,4 +48,6 @@ hr {
   top: 0;
   bottom: 0;
   margin-top: 73px;
+  padding: 0 20px 20px 20px;
+  overflow-y: auto;
 }
