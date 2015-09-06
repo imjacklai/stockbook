@@ -13,24 +13,23 @@ stockBook.controller("StockListCtrl", function ($scope) {
   $scope.stocks = [];
   $scope.records = [];
 
-  stockDB.find({}, function (err, docs) {
-    $scope.stocks = docs;
-    $scope.$apply();
-    if (docs.length != 0) {
-      $scope.showContent(docs[0].name);
-    }
-  });
+  $scope.showStockList = function (isInitial) {
+    stockDB.find({}, function (err, docs) {
+      $scope.stocks = docs;
+      $scope.$apply();
+      if (docs.length != 0 && isInitial) {
+        $scope.showContent(docs[0].name);
+      }
+    });
+  }
 
   $scope.addStock = function (stockName) {
     if (stockName != null) {
-      $scope.stocks.push({ name: stockName });
       var stock = { name: stockName };
-
       stockDB.insert(stock);
-
       new Database({ filename: path.join(__dirname, "db/" + stockName + ".db"), autoload: true });
-
       $scope.newStockName = null;
+      $scope.showStockList(false);
     }
   }
 
@@ -91,6 +90,8 @@ stockBook.controller("StockListCtrl", function ($scope) {
     currentDB.remove({ _id: id }, {});
     $scope.showContent(currentStock);
   };
+
+  $scope.showStockList(true);
 });
 
 $("#datepicker").datetimepicker({
