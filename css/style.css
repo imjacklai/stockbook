@@ -3,11 +3,27 @@ html, body {
   height: 100%;
 }
 
+hr {
+  height: 1px;
+  background-color: #bdc3c7;
+  border: 0;
+}
+
 #sidebar {
   float: left;
   width: 200px;
   height: 100%;
+  padding: 20px;
   background: #ecf0f1;
+}
+
+.stock-link {
+  color: #bdc3c7;
+  cursor: pointer;
+}
+
+.stock-link-active {
+  color: #000;
 }
 
 #container {
@@ -18,6 +34,11 @@ html, body {
 
 #input {
   height: 100px;
+  padding: 20px;
+}
+
+#stock-title {
+  font-size: 20px;
 }
 
 #content {

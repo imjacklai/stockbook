@@ -1,19 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="stockbook">
 <head>
   <title>Stock Book</title>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body ng-app="stockbook">
+<body ng-controller="StockListCtrl">
   <div id="sidebar">
-    sidebar
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="輸入股票名稱" ng-model="newStockName">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="addStock(newStockName)">＋</button>
+      </span>
+    </div>
+
+    <hr>
+
+    <div>
+      <div ng-repeat="stock in stocks">
+        <p class="stock-link" ng-click="showContent(stock.name)" ng-class="{'stock-link-active': stock.name == selectedStock}">#&nbsp;&nbsp;{{ stock.name }}</p>
+      </div>
+    </div>
   </div>
 
   <div id="container">
     <div id="input">
-      input
+      <div id="stock-title" ng-model="title">{{ title }}</div>
     </div>
 
     <div id="content" ng-controller="TabsCtrl">
