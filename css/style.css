@@ -64,9 +64,10 @@ form {
   margin-bottom: 20px;
 }
 
-.info span {
+.info div {
+  display: inline-block;
+  width: 200px;
   font-size: 20px;
-  margin-right: 20px;
 }
 
 #message {

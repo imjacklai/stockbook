@@ -1,7 +1,9 @@
 var path = require("path");
 var fs = require("fs");
+var request = require("request");
 var Database = require("nedb");
-var stockDB = new Database({ filename: path.join(__dirname, "db/stock.db"), autoload: true });
+var stockList = new Database({ filename: path.join(__dirname, "systemDB/stock_list.db"), autoload: true });
+var stockDB = new Database({ filename: path.join(__dirname, "userDB/stock.db"), autoload: true });
 var currentDB;
 var currentStock;
 var addActions = [ "買進股票", "股票股利" ];
@@ -20,26 +22,29 @@ stockBook.controller("StockListCtrl", function ($scope) {
       $scope.isEmpty = docs.length == 0;
       $scope.$apply();
       if (docs.length != 0 && isInitial) {
-        $scope.showContent(docs[0].name);
+        $scope.showContent(docs[0]);
       }
     });
   }
 
   $scope.addStock = function (stockName) {
     if (stockName != null) {
-      var stock = { name: stockName };
-      stockDB.insert(stock);
-      new Database({ filename: path.join(__dirname, "db/" + stockName + ".db") });
-      $scope.newStockName = null;
-      $scope.showStockList(false);
-      $scope.showContent(stockName);
+      stockList.find({ name: new RegExp(stockName) }, function (err, doc) {
+        var stock = { code: doc[0].code, name: doc[0].name };
+        stockDB.insert(stock);
+        console.log(stock.name);
+        new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
+        $scope.newStockName = null;
+        $scope.showStockList(false);
+        $scope.showContent(stock);
+      });
     }
   }
 
-  $scope.showContent = function (stockName) {
-    currentStock = stockName;
-    $scope.selectedStock = stockName;
-    currentDB = new Database({ filename: path.join(__dirname, "db/" + stockName + ".db"), autoload: true });
+  $scope.showContent = function (stock) {
+    currentStock = stock;
+    $scope.selectedStock = stock.name;
+    currentDB = new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db"), autoload: true });
 
     currentDB.find({}).sort({ date: -1 }).exec(function (err, docs) {
       var totalShare = 0;
@@ -60,6 +65,18 @@ stockBook.controller("StockListCtrl", function ($scope) {
       $scope.totalShare = totalShare;
       $scope.totalAmount = totalInvest;
       $scope.$apply();
+    });
+
+    $scope.currentPrice = "---";
+    $scope.change = "---";
+
+    request.get("http://finance.yahoo.com/d/quotes.csv?s=" + stock.code + ".tw&f=snabp2", function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var data = body.split(",");
+        $scope.currentPrice = data[2];
+        $scope.change = data[4].replace(/\"/g, '');
+        $scope.$apply();
+      }
     });
   }
 
@@ -95,7 +112,7 @@ stockBook.controller("StockListCtrl", function ($scope) {
   };
 
   $scope.deleteStock = function (stockName) {
-    fs.unlink(path.join(__dirname, "db/" + stockName + ".db"), function (err) {
+    fs.unlink(path.join(__dirname, "userDB/" + stockName + ".db"), function (err) {
       if (err) throw err;
     });
     stockDB.remove({ name: stockName }, {});

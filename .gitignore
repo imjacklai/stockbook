@@ -34,4 +34,4 @@ node_modules
 StockBook-darwin-x64
 
 # database
-db
+userDB
