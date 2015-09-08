@@ -9,9 +9,9 @@ var currentStock;
 var addActions = [ "買進股票", "股票股利" ];
 var minusActions = [ "賣出股票", "現金股利", "減資配發" ];
 
-var stockBook = angular.module('stockbook', []);
+var stockBook = angular.module('stockbook', ["ngDialog"]);
 
-stockBook.controller("StockListCtrl", function ($scope) {
+stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
   $scope.actions = addActions.concat(minusActions);
   $scope.stocks = [];
   $scope.records = [];
@@ -29,14 +29,43 @@ stockBook.controller("StockListCtrl", function ($scope) {
 
   $scope.addStock = function (stockName) {
     if (stockName != null) {
-      stockList.find({ name: new RegExp(stockName) }, function (err, doc) {
-        var stock = { code: doc[0].code, name: doc[0].name };
-        stockDB.insert(stock);
-        console.log(stock.name);
-        new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
-        $scope.newStockName = null;
-        $scope.showStockList(false);
-        $scope.showContent(stock);
+      stockList.find({ name: new RegExp(stockName) }, function (err, docs) {
+        if (docs.length > 1) {
+          var content = "<p>請選擇要加入的股票</p>";
+          for (var i = 0; i < docs.length; i++) {
+            content += "<button class='btn btn-primary select-btn' ng-click='closeThisDialog(" + i + ")'>" + docs[i].name + "</Button>";
+          }
+
+          ngDialog.open({
+            template: content,
+            plain: true,
+            preCloseCallback: function(value) {
+              if (docs[value] != null) {
+                var stock = { code: docs[value].code, name: docs[value].name };
+                stockDB.insert(stock);
+                new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
+                $scope.newStockName = null;
+                $scope.showStockList(false);
+                $scope.showContent(stock);
+              }
+            }
+          });
+        }
+        else if (docs.length == 1) {
+          var stock = { code: docs[0].code, name: docs[0].name };
+          stockDB.insert(stock);
+          new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
+          $scope.newStockName = null;
+          $scope.showStockList(false);
+          $scope.showContent(stock);
+        }
+        else {
+          ngDialog.open({
+            template: "<p>找不到輸入的股票名稱</p>",
+            plain: true
+          });
+          $scope.newStockName = null;
+        }
       });
     }
   }
