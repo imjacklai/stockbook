@@ -27,6 +27,25 @@ stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
     });
   }
 
+  $scope.checkExistOrAdd = function (stock) {
+    stockDB.find({ code: stock.code }, function (err, docs) {
+      if (docs.length == 0) {
+        stockDB.insert(stock);
+        new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
+        $scope.newStockName = null;
+        $scope.showStockList(false);
+        $scope.showContent(stock);
+      }
+      else {
+        ngDialog.open({
+          template: "<p>你輸入的股票已經存在</p>",
+          plain: true
+        });
+      }
+    });
+    $scope.newStockName = null;
+  }
+
   $scope.addStock = function (stockName) {
     if (stockName != null) {
       stockList.find({ name: new RegExp(stockName) }, function (err, docs) {
@@ -42,22 +61,14 @@ stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
             preCloseCallback: function(value) {
               if (docs[value] != null) {
                 var stock = { code: docs[value].code, name: docs[value].name };
-                stockDB.insert(stock);
-                new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
-                $scope.newStockName = null;
-                $scope.showStockList(false);
-                $scope.showContent(stock);
+                $scope.checkExistOrAdd(stock);
               }
             }
           });
         }
         else if (docs.length == 1) {
           var stock = { code: docs[0].code, name: docs[0].name };
-          stockDB.insert(stock);
-          new Database({ filename: path.join(__dirname, "userDB/" + stock.name + ".db") });
-          $scope.newStockName = null;
-          $scope.showStockList(false);
-          $scope.showContent(stock);
+          $scope.checkExistOrAdd(stock);
         }
         else {
           ngDialog.open({
