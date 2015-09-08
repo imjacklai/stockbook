@@ -17,7 +17,7 @@ app.on("ready", function() {
     center: true
   });
   mainWindow.loadUrl("file://" + __dirname + "/index.html");
-  mainWindow.openDevTools();
+  // mainWindow.openDevTools();
 
   mainWindow.on("close", function() {
     mainWindow = null;
