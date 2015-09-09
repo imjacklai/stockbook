@@ -165,5 +165,6 @@ stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
 $("#datepicker").datetimepicker({
   timepicker: false,
   format: "Y-m-d",
-  scrollInput: false
+  scrollInput: false,
+  lang: "zh-TW"
 });
