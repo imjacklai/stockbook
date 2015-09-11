@@ -11,102 +11,110 @@
 </head>
 <body ng-controller="StockListCtrl">
 
-  <div id="sidebar">
-
-    <!-- new stock input -->
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="輸入股票名稱" ng-model="newStockName">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="addStock(newStockName)"><i class="glyphicon glyphicon-plus"></i></button>
-      </span>
-    </div>
-    <!-- new stock input end -->
-
-    <hr>
-
-    <!-- stock list -->
-    <div>
-      <div ng-repeat="stock in stocks">
-        <p class="stock-link" ng-click="showContent(stock)" ng-class="{'stock-link-active': stock.name == selectedStock}">#&nbsp;&nbsp;{{ stock.name }}</p>
-      </div>
-    </div>
-    <!-- stock list end -->
-
+  <div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
   </div>
 
-  <div id="container">
-    
-    <div id="wrapper" ng-hide="isEmpty">
-      <!-- new record input -->
-      <div id="input">
-        <form class="form-inline" role="form" ng-submit="addRecord()">
-          <div class="form-group">
-            <input type="text" id="datepicker" class="form-control" placeholder="日期" ng-model="date">
-          </div>
+  <div id="all">
+    <div id="sidebar">
 
-          <div class="form-group">
-            <select class="form-control" ng-model="action" ng-options="action for action in actions"><option></option></select>
-          </div>
-
-          <div class="form-group">
-            <input type="number" class="form-control" placeholder="股數" ng-model="share">
-          </div>
-
-          <div class="form-group">
-            <input type="number" class="form-control" placeholder="單價" ng-model="price">
-          </div>
-
-          <div class="form-group">
-            <input type="number" class="form-control" placeholder="總額" ng-model="amount">
-          </div>
-
-          <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>  
-        </form>
-
-        <button id="delete-stock-btn" class="btn btn-danger" ng-click="deleteStock(selectedStock)"><i class="glyphicon glyphicon-trash"></i></button>
+      <!-- new stock input -->
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="輸入股票名稱" ng-model="newStockName">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="addStock(newStockName)"><i class="glyphicon glyphicon-plus"></i></button>
+        </span>
       </div>
-      <!-- new record input end -->
+      <!-- new stock input end -->
 
-      <!-- records table -->
-      <div id="content">
+      <hr>
 
-        <div class="info">
-          <div ng-model="currentPrice">目前股價: {{ currentPrice }}</div>
-          <div ng-model="change">漲跌幅度: {{ change }}</div>
-          <div ng-model="totalShare">持有股數: {{ totalShare }}</div>
-          <div ng-model="totalAmount">投資金額: {{ totalAmount }}</div>
+      <!-- stock list -->
+      <div>
+        <div ng-repeat="stock in stocks">
+          <p class="stock-link" ng-click="showContent(stock)" ng-class="{'stock-link-active': stock.name == selectedStock}">#&nbsp;&nbsp;{{ stock.name }}</p>
         </div>
-
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>類型</th>
-              <th>股數</th>
-              <th>單價</th>
-              <th>總額</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="record in records">
-              <td>{{ record.date }}</td>
-              <td>{{ record.action }}</td>
-              <td>{{ record.share }}</td>
-              <td>{{ record.price }}</td>
-              <td>{{ record.amount }}</td>
-              <td>
-                <button class="btn btn-danger" ng-click="deleteRecord(record._id)"><i class="glyphicon glyphicon-trash"></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-      <!-- records table end -->
+      <!-- stock list end -->
+
     </div>
 
-    <div id="message" ng-show="isEmpty">
-      請在視窗左上角新增一個股票開始!
+    <div id="container">
+      
+      <div id="wrapper" ng-hide="isEmpty">
+        <!-- new record input -->
+        <div id="input">
+          <form class="form-inline" role="form" ng-submit="addRecord()">
+            <div class="form-group">
+              <input type="text" id="datepicker" class="form-control" placeholder="日期" ng-model="date">
+            </div>
+
+            <div class="form-group">
+              <select class="form-control" ng-model="action" ng-options="action for action in actions"><option></option></select>
+            </div>
+
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="股數" ng-model="share">
+            </div>
+
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="單價" ng-model="price">
+            </div>
+
+            <div class="form-group">
+              <input type="number" class="form-control" placeholder="總額" ng-model="amount">
+            </div>
+
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>  
+          </form>
+
+          <button id="delete-stock-btn" class="btn btn-danger" ng-click="deleteStock(selectedStock)"><i class="glyphicon glyphicon-trash"></i></button>
+        </div>
+        <!-- new record input end -->
+
+        <!-- records table -->
+        <div id="content">
+
+          <div class="info">
+            <div ng-model="currentPrice">目前股價: {{ currentPrice }}</div>
+            <div ng-model="change">漲跌幅度: {{ change }}</div>
+            <div ng-model="totalShare">持有股數: {{ totalShare }}</div>
+            <div ng-model="totalAmount">投資金額: {{ totalAmount }}</div>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>類型</th>
+                <th>股數</th>
+                <th>單價</th>
+                <th>總額</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="record in records">
+                <td>{{ record.date }}</td>
+                <td>{{ record.action }}</td>
+                <td>{{ record.share }}</td>
+                <td>{{ record.price }}</td>
+                <td>{{ record.amount }}</td>
+                <td>
+                  <button class="btn btn-danger" ng-click="deleteRecord(record._id)"><i class="glyphicon glyphicon-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- records table end -->
+      </div>
+
+      <div id="message" ng-show="isEmpty">
+        請在視窗左上角新增一個股票開始!
+      </div>
     </div>
   </div>
 

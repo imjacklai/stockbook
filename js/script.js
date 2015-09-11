@@ -118,6 +118,9 @@ stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
         $scope.$apply();
       }
     });
+
+    $("#all").show();
+    $(".spinner").hide();
   }
 
   $scope.addRecord = function () {
