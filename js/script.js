@@ -24,6 +24,10 @@ stockBook.controller("StockListCtrl", function ($scope, ngDialog) {
       if (docs.length != 0 && isInitial) {
         $scope.showContent(docs[0]);
       }
+      else {
+        $("#all").show();
+        $(".spinner").hide();
+      }
     });
   }
 
